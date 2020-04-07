@@ -1,4 +1,6 @@
 var profit = 0;
+let gettotalProfit = localStorage.getItem("totalProfit");
+
 
 window.onload=function() {
 
@@ -6,9 +8,10 @@ window.onload=function() {
         localStorage.setItem("totalProfit", 0);
     }
 
-    this.storeData();
-
-
+    if (this.document.getElementById("savedProfit") != null){
+        document.getElementById("savedProfit").innerHTML = "Total Profit: $" + parseFloat(gettotalProfit).toFixed(2);
+    }
+    
 }
 
 function platformChange(){
@@ -91,26 +94,19 @@ function submit(){
     
     
     
+    console.log("profit variable= " + profit);
+    profit = calculate();
     
-    profit = profit + calculate();
-    localStorage.setItem("totalProfit", parseInt(localStorage.getItem("totalProfit")) + sProfit);
-    storeData();
-    inventoryUpdate();
+    return profit;
 
 }
 
-function storeData(){
-    console.log("storeData function working" );
-    
-    let gettotalProfit = localStorage.getItem("totalProfit");
-    console.log(localStorage.getItem("totalProfit"));
-    document.getElementById("savedProfit").innerHTML = "Total Profit: " + parseInt(gettotalProfit).toFixed(2);
-}
+
 
 function reset(){
-    profit = 0;
+    profit = 0.00;
     localStorage.setItem("totalProfit", profit);
-    storeData();
+    document.getElementById("savedProfit").innerHTML = "Total Profit: $" + localStorage.getItem("totalProfit");
 }
 
 function inventoryUpdate(){
@@ -126,5 +122,12 @@ function inventoryUpdate(){
     let condition = document.getElementById("itemCondition").value;
     let profit = calculate();
 
-    addRow(category, brand, name, size, color, pPrice, sPrice, parseInt(profit).toFixed(2), platform, origin, condition);
+    addRow(category, brand, name, size, color, pPrice, sPrice, parseFloat(profit).toFixed(2), platform, origin, condition);
+}
+
+function addEntry(){
+    inventoryUpdate();
+    
+    localStorage.setItem("totalProfit", parseFloat(localStorage.getItem("totalProfit")) + calculate());
+    
 }

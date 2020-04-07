@@ -18,10 +18,6 @@ function addRow(category, brand, name, size, colorway, pPrice, sPrice, profit, p
     var cell9 = row.insertCell(8);
     var cell10 = row.insertCell(9);
     var cell11 = row.insertCell(10);
-    var buttonCell = row.insertCell(11);
-
-    var deleteButton = document.createElement("button");
-    deleteButton.innerHTML = "X";
     
     
     cell1.innerHTML = category;
@@ -35,7 +31,7 @@ function addRow(category, brand, name, size, colorway, pPrice, sPrice, profit, p
     cell9.innerHTML = profit;
     cell10.innerHTML = platform;
     cell11.innerHTML = origin;
-    buttonCell.innerHTML = deleteButton
+    
     
 }
 

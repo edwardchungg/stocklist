@@ -34,6 +34,16 @@ content{
     
 }
 
+.inputForm-container{
+    height: 40%;
+    width: 70%;
+    
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
 .form-control{
     width: 60%;
     height: 50%;
@@ -51,3 +61,17 @@ content{
     
 }
 
+
+@media screen and (min-width: 768px) {
+    .modal-dialog {
+      width: 700px; /* New width for default modal */
+    }
+    .modal-sm {
+      width: 350px; /* New width for small modal */
+    }
+}
+@media screen and (min-width: 992px) {
+    .modal-lg {
+      width: 950px; /* New width for large modal */
+    }
+}
