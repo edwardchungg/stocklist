@@ -1,5 +1,6 @@
 var profit = 0;
-let gettotalProfit = localStorage.getItem("totalProfit");
+var gettotalProfit = localStorage.getItem("totalProfit");
+
 
 
 window.onload=function() {
@@ -9,9 +10,11 @@ window.onload=function() {
     }
 
     if (this.document.getElementById("savedProfit") != null){
-        document.getElementById("savedProfit").innerHTML = "Total Profit: $" + parseFloat(gettotalProfit).toFixed(2);
+        document.getElementById("savedProfit").innerHTML = "Total Profit: $" + parseFloat(gettotalProfit);
     }
     
+    
+    this.tableUpdate();
 }
 
 function platformChange(){
@@ -22,7 +25,7 @@ function platformChange(){
 
     if (selectedPlatform == "goat" || selectedPlatform  == "stockx" || selectedPlatform =="local"){
         shippingcostinput.style.display="none";
-        console.log(true);
+        
     }
     else{
         shippingcostinput.style.display="block";
@@ -77,27 +80,20 @@ function calculate(){
         alert("Please pick a Selling platform");
         return;
     }
-    return cProfit;
+    
+    return parseFloat(cProfit.toFixed(2));
+    
 }
 
 function submit(){
-    console.log("button worked");
-
     
 
     let sProfit = calculate();
-    console.log(calculate);
     
-    document.getElementById("profit").innerHTML = "Profit after fees: " + sProfit.toFixed(2);
+    document.getElementById("profit").innerHTML = "Profit after fees: " + sProfit;
     document.getElementById("profitmargin").innerHTML = "Profit Margin: " + ((sProfit / document.getElementById("sellingPrice").value) * 100).toFixed(2) + "%";
     
-    
-    
-    
-    console.log("profit variable= " + profit);
-    profit = calculate();
-    
-    return profit;
+    return sProfit;
 
 }
 
@@ -110,24 +106,90 @@ function reset(){
 }
 
 function inventoryUpdate(){
-    let category = document.getElementById("itemCategory").value;
-    let brand = document.getElementById("itemBrand").value;
-    let name = document.getElementById("itemName").value;
-    let size = document.getElementById("itemSize").value;
-    let color = document.getElementById("itemColor").value;
-    let origin = document.getElementById("itemOrigin").value;
-    let pPrice = document.getElementById("purchasePrice").value;
-    let sPrice = document.getElementById("sellingPrice").value;
-    let platform = document.getElementById("platform").value;
-    let condition = document.getElementById("itemCondition").value;
-    let profit = calculate();
 
-    addRow(category, brand, name, size, color, pPrice, sPrice, parseFloat(profit).toFixed(2), platform, origin, condition);
+
+
+    
+
+
+    var entry = {
+
+        id : Math.floor(Math.random() * 1000000),
+        category : document.getElementById("itemCategory").value,
+        brand : document.getElementById("itemBrand").value,
+        name : document.getElementById("itemName").value,
+        size : document.getElementById("itemSize").value,
+        color : document.getElementById("itemColor").value,
+        origin : document.getElementById("itemOrigin").value,
+        pPrice : document.getElementById("purchasePrice").value,
+        sPrice : document.getElementById("sellingPrice").value,
+        platform : document.getElementById("platform").value,
+        condition : document.getElementById("itemCondition").value,
+        profit : calculate()
+    
+    }
+    
+
+    localStorage.setItem(entry.id, JSON.stringify(entry));
+    console.log(localStorage.getItem(entry.id));
+    var jsonString = localStorage.getItem(entry.id);
+    //console.log(jsonString);
+    //console.log(entry.id);
+    //console.log(JSON.stringify(entry));
+    addRow(entry.category, entry.brand, entry.name, entry.size, entry.color, entry.pPrice, entry.sPrice, parseFloat(entry.profit), entry.platform, entry.origin, entry.condition);
+
+
 }
 
 function addEntry(){
+
     inventoryUpdate();
+    localStorage.setItem("totalProfit", parseInt(localStorage.getItem("totalProfit")) + calculate());
     
-    localStorage.setItem("totalProfit", parseFloat(localStorage.getItem("totalProfit")) + calculate());
     
 }
+
+
+function tableUpdate(){
+    for (let i = 0 ; i < localStorage.length; i++){
+
+        
+            if (!isNaN(localStorage.key(i))){
+
+
+                var s = (JSON.parse(localStorage.getItem(localStorage.key(i))));
+                console.log(s);
+
+                addRow(s.category, s.brand, s.name, s.size, s.color, s.pPrice, s.sPrice, parseFloat(s.profit), s.platform, s.origin, s.condition);
+            
+        }
+        
+    }
+}
+
+function resetTable(){
+    console.log("resetTable function localStorage.length: " + localStorage.length);
+    
+    for (let i = localStorage.length ; i >= 0; i--){ 
+
+        
+        if (!isNaN(localStorage.key(i))){
+
+
+            var s = (JSON.parse(localStorage.getItem(localStorage.key(i))));
+            localStorage.removeItem(localStorage.key(i));
+            
+            //resetTable();
+        }
+
+        
+    }
+    location.reload();
+    console.log("done");
+}
+/*
+Local Storage Keys and Values:
+totalProfit : Total Profit Accrued
+idNumber : idNumber assigned to item entry
+entry : item properties
+*/
