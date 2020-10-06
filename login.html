@@ -44,14 +44,19 @@
 
         <content>
             <div> <h2 class="display-2"> Dashboard </h2> </div>
-            <div> <h3 class="display-1"> This Week's Statistics</h3></div>
-            <div class="chart"> 
-                <h3 class="display-3"> Total Sales this Week </h3>
-            </div>
+            <div> <h3 class="display-1"> Log In</h3></div>
 
-            <div> <h3 class="display-1" id="savedProfit"> Total Profits:</h3></div>
-            <button type="button" class="btn btn-outline-dark" onClick="reset()"> Reset </button>
-
+            <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
+                <br>
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+                <br>
+                <button type="submit" onClick="login()">Login</button>
+                
+              </div>
+            
         </content>
        <script src="createTable.js"></script>
        <script src="profitcalculation.js" async defer></script>
@@ -59,4 +64,5 @@
        
         
     </body>
+    <script src="login.js"></script>
 </html>

@@ -36,8 +36,8 @@
                         <li class="nav-item active">
                           <a class="nav-link" href="sales.html"> Sales </a>
                         </li>
-                        <li class="nav-item active">
-                                <a class="nav-link" href="calculator.html"> Calculator </a>
+                        <li class="nav-item active" style="float:right">
+                            <a class="nav-link" href="login.html" id="loginNav"> Log In </a>
                         </li>
                       </ul>
 
@@ -66,7 +66,7 @@
                                 <th scope="col"> Selling Price </th>
                                 <th scope="col"> Profit </th>
                                 <th scope="col"> Selling Platform </th>
-                                <th scope="col"> Origin </th>
+                                <th scope="col"> Source </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,7 +80,9 @@
                         Add Item
                     </button>
 
-
+                    <button type="button" class="btn btn-dark" data-toggle="modal" onClick="resetTable()">
+                        Reset Table
+                    </button>
 
 
                     
@@ -116,20 +118,15 @@
                                     <option class="dropdownOption" value="Shoe">Shoe</option>
                                     <option class="dropdownOption" value="Accessory">Accessory</option>
                             </select>
-                            <select id="itemBrand" name="itemBrand" class="form-control">
-                                    <option class="dropdownOption" value="" disabled selected>Brand</option>
-                                    <option class="dropdownOption" value="supreme">Supreme</option>
-                                    <option class="dropdownOption" value="nike">Nike</option>
-                                    <option class="dropdownOption" value="adidas">Adidas</option>
-                                    <option class="dropdownOption" value="jordan">Jordan</option>
-                                    <option class="dropdownOption" value="assc">Antisocial Social Club</option>
-                            </select>
+                            
+                            <input type="text" id="itemBrand" name="itemBrand" class="form-control" placeholder="Brand">
 
                             <input type="text" id="itemName" name="itemName" class="form-control" placeholder="Item Name">
 
 
                             <select id="itemSize" name="itemSize" class="form-control">
                                     <option class="dropdownOption" value="" disabled selected>Size</option>
+                                    <option class="dropdownOption" value="0">NA</option>
                                     <option class="dropdownOption" value="4">4</option>
                                     <option class="dropdownOption" value="4.5">4.5</option>
                                     <option class="dropdownOption" value="5">5</option>
@@ -169,18 +166,9 @@
                             <input type="text" id="purchasePrice" name="purchasePrice" class="form-control" placeholder="Purchase Price">
                             <input type="text" id="sellingPrice" name="sellingPrice" class="form-control" placeholder="Selling Price">
 
-                            <select id="platform" name="platform" onchange="platformChange()" class="form-control">
-                                    <option class="dropdownOption" value="" disabled selected>Selling Platform</option>
-                                    <option class="dropdownOption" value="ebay">eBay</option>
-                                    <option class="dropdownOption" value="grailed">Grailed</option>
-                                    <option class="dropdownOption" value="stockx">Stockx</option>
-                                    <option class="dropdownOption" value="goat">Goat</option>
-                                    <option class="dropdownOption" value="paypalinvoice">Paypal Invoice</option>
-                                    <option class="dropdownOption" value="paypalfnf">Paypal Friends and Family</option>
-                                    <option class="dropdownOption" value="local"> Local </option>
                             
-                            </select>
-
+                            <input type="text" id="platform" name="platform" class="form-control" placeholder="Selling Platform">
+                            <input type="text" id="fee" name="fee" class="form-control" placeholder="Selling Fee">
                             <input type="text" id="shippingCost" name="shippingCost" class="form-control" placeholder="Shipping Cost">
 
                             <button value="submit" onClick="submit()" class="btn btn-dark"> Submit </button>
@@ -189,7 +177,8 @@
                             <div id="profit"></div>
                     
                             <div id="profitmargin"></div>
- 
+
+
 
                     </div>
 
@@ -198,7 +187,7 @@
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onClick="inventoryUpdate()">Add</button>
+                <button type="button" class="btn btn-primary" onClick="addEntry()">Add</button>
                 </div>
             </div>
             </div>

@@ -1,6 +1,6 @@
 var profit = 0;
 var gettotalProfit = localStorage.getItem("totalProfit");
-
+var loginStatus;
 
 
 window.onload=function() {
@@ -45,41 +45,16 @@ function calculate(){
     platform = document.getElementById("platform").value;
     sCost = document.getElementById("shippingCost").value;
     
-
-    
-
-    if (platform == "paypalinvoice"){
-        cProfit = (sPrice * 0.971) - pPrice - sCost;
-    }
-    else if (platform =="paypalfnf"){
-        cProfit = sPrice - pPrice - sCost;
-    }
-    else if (platform == "ebay"){
-        if (sPrice >= 200){
-            cProfit = (sPrice * 0.971 - 0.30) - pPrice - sCost;
-        }
-        else{
-            cProfit = (sPrice * 0.90 * 0.971 - 0.30) - pPrice -sCost;
-        }
-        
-    }
-    else if (platform =="grailed"){
-        cProfit = (sPrice * 0.94 * 0.971 - 0.30) - pPrice - sCost;
-    }
-    else if (platform == "stockx"){
-        cProfit = (sPrice * 0.90 * 0.971 - 0.30) -pPrice;
-    }
-
-    else if (platform == "goat"){
-        cProfit = ((sPrice * 0.905 - 5) * 0.971 - 0.30) - pPrice;
-    }
-    else if (platform =="local"){
-        cProfit = sPrice-pPrice;
+    if (document.getElementById("fee") == null){
+        sFee = 0;
     }
     else{
-        alert("Please pick a Selling platform");
-        return;
+        sFee = document.getElementById("fee").value;
     }
+    
+    
+    cProfit = (sPrice * (100-sFee)/100 ) - pPrice - sCost;
+    
     
     return parseFloat(cProfit.toFixed(2));
     
@@ -87,7 +62,7 @@ function calculate(){
 
 function submit(){
     
-
+    
     let sProfit = calculate();
     
     document.getElementById("profit").innerHTML = "Profit after fees: " + sProfit;
@@ -109,25 +84,49 @@ function inventoryUpdate(){
 
 
 
-    
+    if (window.location.href.indexOf("inventory") > -1){
 
+        var entry = {
+        
+            id : "i" + Math.floor(Math.random() * 1000000),
+            category : document.getElementById("itemCategory").value,
+            brand : document.getElementById("itemBrand").value,
+            name : document.getElementById("itemName").value,
+            size : document.getElementById("itemSize").value,
+            color : document.getElementById("itemColor").value,
+            origin : document.getElementById("itemOrigin").value,
+            pPrice : document.getElementById("purchasePrice").value,
+            sPrice : document.getElementById("sellingPrice").value,
+            platform : document.getElementById("platform").value,
+            condition : document.getElementById("itemCondition").value,
+            profit : calculate()
+        
+        }
 
-    var entry = {
-
-        id : Math.floor(Math.random() * 1000000),
-        category : document.getElementById("itemCategory").value,
-        brand : document.getElementById("itemBrand").value,
-        name : document.getElementById("itemName").value,
-        size : document.getElementById("itemSize").value,
-        color : document.getElementById("itemColor").value,
-        origin : document.getElementById("itemOrigin").value,
-        pPrice : document.getElementById("purchasePrice").value,
-        sPrice : document.getElementById("sellingPrice").value,
-        platform : document.getElementById("platform").value,
-        condition : document.getElementById("itemCondition").value,
-        profit : calculate()
-    
     }
+    else{
+
+        var entry = {
+        
+            id : "s" + Math.floor(Math.random() * 1000000),
+            category : document.getElementById("itemCategory").value,
+            brand : document.getElementById("itemBrand").value,
+            name : document.getElementById("itemName").value,
+            size : document.getElementById("itemSize").value,
+            color : document.getElementById("itemColor").value,
+            origin : document.getElementById("itemOrigin").value,
+            pPrice : document.getElementById("purchasePrice").value,
+            sPrice : document.getElementById("sellingPrice").value,
+            platform : document.getElementById("platform").value,
+            condition : document.getElementById("itemCondition").value,
+            profit : calculate()
+        
+        }
+
+    }
+
+    console.log(entry.id);
+    
     
 
     localStorage.setItem(entry.id, JSON.stringify(entry));
@@ -136,15 +135,32 @@ function inventoryUpdate(){
     //console.log(jsonString);
     //console.log(entry.id);
     //console.log(JSON.stringify(entry));
-    addRow(entry.category, entry.brand, entry.name, entry.size, entry.color, entry.pPrice, entry.sPrice, parseFloat(entry.profit), entry.platform, entry.origin, entry.condition);
-
+    var s = entry;
+    if(entry.id.charAt(0) == "i"){
+        addRow("inventory", s.category, s.brand, s.name, s.size, s.color, s.pPrice, s.sPrice, parseFloat(s.profit), s.platform, s.origin, s.condition);
+    }
+    else{
+        addRow("sales", s.category, s.brand, s.name, s.size, s.color, s.pPrice, s.sPrice, parseFloat(s.profit), s.platform, s.origin, s.condition);
+    }
 
 }
 
 function addEntry(){
+    if(window.location.href.indexOf("sales") > -1){
+        var page = "sales";
+    }
+    
 
+    console.log(page);
+    console.log("sales not working");
+    
     inventoryUpdate();
-    localStorage.setItem("totalProfit", parseInt(localStorage.getItem("totalProfit")) + calculate());
+
+    if (page == "sales"){
+        console.log("Working");
+        localStorage.setItem("totalProfit", parseInt(localStorage.getItem("totalProfit")) + calculate());
+    }
+    
     
     
 }
@@ -153,14 +169,20 @@ function addEntry(){
 function tableUpdate(){
     for (let i = 0 ; i < localStorage.length; i++){
 
-        
-            if (!isNaN(localStorage.key(i))){
-
+            
+            if (!isNaN(localStorage.key(i).substring(1))){
 
                 var s = (JSON.parse(localStorage.getItem(localStorage.key(i))));
                 console.log(s);
 
-                addRow(s.category, s.brand, s.name, s.size, s.color, s.pPrice, s.sPrice, parseFloat(s.profit), s.platform, s.origin, s.condition);
+                if(localStorage.key(i).charAt(0) == "i"){
+                    addRow("inventory", s.category, s.brand, s.name, s.size, s.color, s.pPrice, s.sPrice, parseFloat(s.profit), s.platform, s.origin, s.condition);
+                }
+                else{
+                    addRow("sales", s.category, s.brand, s.name, s.size, s.color, s.pPrice, s.sPrice, parseFloat(s.profit), s.platform, s.origin, s.condition);
+                }
+
+                
             
         }
         
@@ -168,16 +190,32 @@ function tableUpdate(){
 }
 
 function resetTable(){
+
+    var page;
+
     console.log("resetTable function localStorage.length: " + localStorage.length);
+    if(window.location.href.indexOf("sales") > -1){
+        page = "sales";
+    }
+    else{
+        page = "inventory";
+    }
     
-    for (let i = localStorage.length ; i >= 0; i--){ 
+    for (let i = localStorage.length -1 ; i >= 0; i--){ 
 
         
-        if (!isNaN(localStorage.key(i))){
+        
+        if (!isNaN(localStorage.key(i).substring(1))){
 
-
-            var s = (JSON.parse(localStorage.getItem(localStorage.key(i))));
-            localStorage.removeItem(localStorage.key(i));
+            if (page == "inventory" && localStorage.key(i).charAt(0) == "i"){
+                var s = (JSON.parse(localStorage.getItem(localStorage.key(i))));
+                localStorage.removeItem(localStorage.key(i));
+            }
+            else if (page == "sales" && localStorage.key(i).charAt(0) == "s"){
+                var s = (JSON.parse(localStorage.getItem(localStorage.key(i))));
+                localStorage.removeItem(localStorage.key(i));
+            }
+            
             
             //resetTable();
         }
